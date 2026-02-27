@@ -15,8 +15,9 @@ You can contribute by solving any of our open issues, or  any other improvement 
 - Create a pull request
 
 ## Install
-- Install python3 from https://www.python.org/download/releases/3.0/
-- Install the game with `pip3 install git+https://github.com/douglas-cpp/snake`
+- Install python3 from [https://www.python.org/download/releases/3.0/]
+- Install LPM from [https://github.com/LFF-Linux/LFF-Linux-LPM]
+- Install the game with `lpm install snake`
 - Run the game with `snake`
 
 ## LPM
