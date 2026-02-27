@@ -1,0 +1,2 @@
+installer=install.py
+installedfilepath=/usr/local/lib/python3.12/dist-packages/snake-0.0.1-py3.12.egg,/usr/local/bin/snake
