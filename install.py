@@ -18,14 +18,14 @@ subprocess.run(
     check=True,
     stdout=subprocess.DEVNULL,
     stderr=subprocess.DEVNULL
-    )
+)
 
-def search_files(directory, extension):
+def search_files(directory, filename):
+    """Recursively search for files named `filename` in `directory`."""
     files = []
     for root, _, filenames in os.walk(directory):
-        for filename in filenames:
-            if filename.endswith(extension):
-                files.append(os.path.join(root, filename))
+        if filename in filenames:
+            files.append(os.path.join(root, filename))
     return files
 
 # Get the username of the account
@@ -35,7 +35,7 @@ username = getpass.getuser()
 directory_to_search = f'/home/{username}'
 
 # Search for snake.png
-snake_png = search_files(directory_to_search, 'snake.png')
+snake_png_files = search_files(directory_to_search, 'snake.png')
 
 def create_desktop_entry():
     desktop_entry = f'''[Desktop Entry]
@@ -48,25 +48,30 @@ Categories=Games;
 '''
 
     # Specify the path and filename for the desktop entry file
-    desktop_entry_file = f'/home/{username}/.local/share/applications/snake.desktop'
     destination_dir = f'/home/{username}/.local/share/applications/snake/'
+    desktop_entry_file = f'{destination_dir}snake.desktop'
 
     # Create the necessary directories
     os.makedirs(destination_dir, exist_ok=True)
 
-    # Copy the snake.png file to the destination directory
-    for file in snake_png:
+    # Copy the snake.png file(s) to the destination directory safely
+    for file in snake_png_files:
         filename = os.path.basename(file)
         destination = os.path.join(destination_dir, filename)
+        # Skip copy if the file already exists at the same path
+        if os.path.abspath(file) == os.path.abspath(destination):
+            print(f"{filename} already exists at destination, skipping copy.")
+            continue
         shutil.copy2(file, destination)
 
+    # Write the desktop entry file
     with open(desktop_entry_file, 'w') as f:
         f.write(desktop_entry)
 
     # Set execute permissions on the desktop entry file
     os.chmod(desktop_entry_file, 0o755)
 
-# Run the create_desktop_entry() function to create the desktop entry
+# Run the desktop entry creation
 create_desktop_entry()
 print('Snake has been successfully installed!')
 
